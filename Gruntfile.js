@@ -23,11 +23,87 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
-      compress: true,
+      compress: {},
       },
       dist: {
-        src: 'src/index.html',
-        dest: '/dist/index.html'
+        src: 'src/perfmatters.js',
+        dest: 'dist/perfmatters.js'
+      }
+    },
+
+
+        responsive_images: {
+      dev: {
+        options: {
+          engine: 'im',
+          sizes: [{
+
+            suffix: '',
+            rename: false,
+            width: '100%',
+            quality:70
+
+          }]
+        },
+
+        files: [{
+          expand: true,
+          src: ['*.{gif,jpg,png,svg}'],
+          cwd: 'img_src/',
+          dest: 'img/'
+        }]
+      }
+    },
+
+      critical: {
+    dist: {
+      options: {
+        base: './'
+      },
+      // The source file
+      src: 'index.html',
+      // The destination file
+      dest: 'result.html'
+      }
+    },
+
+    pagespeed: {
+  options: {
+    nokey: true,
+    url: "http://3ff1c2a9.ngrok.io/"
+  },
+  prod: {
+    options: {
+      url: "http://3ff1c2a9.ngrok.io/",
+      locale: "en_GB",
+      strategy: "desktop",
+      threshold: 80
+    }
+  },
+  paths: {
+    options: {
+      paths: ["http://3ff1c2a9.ngrok.io/"],
+      locale: "en_GB",
+      strategy: "desktop",
+      threshold: 80
+    }
+  }
+},
+  htmlmin: {
+      dist: {
+        options: {
+          removeComments: true,
+          collapseWhitespace: true
+        },
+        files: {
+          'dist/index.html': 'src/index.html'
+        }
+      },
+      dev: {
+        files: {
+          'dist/index.html': 'src/index.html',
+
+        }
       }
     },
     jshint: {
@@ -73,6 +149,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-pagespeed');
+  grunt.loadNpmTasks('grunt-contrib-htmlmin');
+  grunt.loadNpmTasks('grunt-responsive-images');
+  grunt.loadNpmTasks('grunt-critical');
+
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'nodeunit', 'concat', 'uglify']);
