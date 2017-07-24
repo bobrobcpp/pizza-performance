@@ -11,27 +11,24 @@ module.exports = function(grunt) {
       '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
-    concat: {
-      options: {
-        banner: '<%= banner %>',
-        stripBanners: true
-      },
+
       dist: {
         src: ['lib/<%= pkg.name %>.js'],
         dest: 'dist/<%= pkg.name %>.js'
-      }
-    },
+      },
+
+//minify javascript task
     uglify: {
       options: {
       compress: {},
       },
       dist: {
-        src: 'src/perfmatters.js',
-        dest: 'dist/perfmatters.js'
+        src: 'src/views/js/main.js',
+        dest: 'dist/views/js/main.min.js'
       }
     },
 
-
+//grunt responsive images task
         responsive_images: {
       dev: {
         options: {
@@ -49,27 +46,17 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           src: ['*.{gif,jpg,png,svg}'],
-          cwd: 'img_src/',
-          dest: 'img/'
+          cwd: 'src/img/',
+          dest: 'dist/img/'
         }]
       }
     },
 
-      critical: {
-    dist: {
-      options: {
-        base: './'
-      },
-      // The source file
-      src: 'index.html',
-      // The destination file
-      dest: 'result.html'
-      }
-    },
-
+//pagespeed task .requires site to be loaded with ngrok
     pagespeed: {
   options: {
     nokey: true,
+    // Change  urls within pagespeed to your ngrok site url
     url: "http://3ff1c2a9.ngrok.io/"
   },
   prod: {
@@ -89,73 +76,42 @@ module.exports = function(grunt) {
     }
   }
 },
-  htmlmin: {
-      dist: {
-        options: {
-          removeComments: true,
-          collapseWhitespace: true
-        },
-        files: {
-          'dist/index.html': 'src/index.html'
-        }
-      },
-      dev: {
-        files: {
-          'dist/index.html': 'src/index.html',
 
-        }
-      }
-    },
-    jshint: {
-      options: {
-        curly: true,
-        eqeqeq: true,
-        immed: true,
-        latedef: true,
-        newcap: true,
-        noarg: true,
-        sub: true,
-        undef: true,
-        unused: true,
-        boss: true,
-        eqnull: true,
-        globals: {}
-      },
-      gruntfile: {
-        src: 'Gruntfile.js'
-      },
-      lib_test: {
-        src: ['lib/**/*.js', 'test/**/*.js']
-      }
-    },
-    nodeunit: {
-      files: ['test/**/*_test.js']
-    },
+//minify css task
+    cssmin: {
+  target: {
+    files: [{
+      expand: true,
+      cwd: 'src/css',
+      src: ['*.css', '!*.min.css'],
+      dest: 'dist/css',
+      ext: '.min.css'
+    }]
+  }
+},
+
+//watch for changes in js and css source files and minify accordingly
     watch: {
-      gruntfile: {
-        files: '<%= jshint.gruntfile.src %>',
-        tasks: ['jshint:gruntfile']
+      jsmin: {
+        files: ['src/**/*.js'],
+        tasks: ['uglify']
       },
-      lib_test: {
-        files: '<%= jshint.lib_test.src %>',
-        tasks: ['jshint:lib_test', 'nodeunit']
+      cssmin: {
+        files: ['src/**/*.css'],
+        tasks: ['cssmin']
       }
     }
   });
 
   // These plugins provide necessary tasks.
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-nodeunit');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-pagespeed');
-  grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-responsive-images');
-  grunt.loadNpmTasks('grunt-critical');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
 
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'nodeunit', 'concat', 'uglify']);
+  grunt.registerTask('default', ['uglify']);
 
 };
