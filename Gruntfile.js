@@ -37,7 +37,7 @@ module.exports = function(grunt) {
       },
       dist: {
         src: 'src/views/js/main.js',
-        dest: 'dist/views/js/main.min.js'
+        dest: 'dist/views/js/main.js'
       }
     },
 
@@ -87,7 +87,7 @@ module.exports = function(grunt) {
       cwd: 'src/css',
       src: ['*.css', '!*.min.css'],
       dest: 'dist/css',
-      ext: '.min.css'
+      ext: '.css'
     }]
   }
 },
