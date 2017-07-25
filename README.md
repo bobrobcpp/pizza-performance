@@ -25,10 +25,11 @@ The second part of the project was to optimize the JS in views/main.js optimize 
 ### Optimizations made:
 * Initialise the scrollTop to a variable ```scrollPos``` outside ```updatePositions``` or ```DOMContentLoaded``` event, recalculate its value outside of for loop within ```updatePositions```.
 * Move variables ```item``` and ```scroll``` out of the for loop in the ```updatePositions```  function.
-* Refactor ```updatePositions``` using the ```requestAnimationFrame``` function which       reduces the amount of recalculate styles required.
+* Refactor ```updatePositions``` and pass within an anonymous callback function to ```requestAnimationFrame``` function which reduces the time required to recalculate styles.
 * Refactor ```updatePositions``` to use ```transform:translateX``` rather than left so that     geometry changes and repainting are not a neccesary when moving pizzas horizontally while scrolling. 
 * CSS for transform was marked with a ```will-change``` property.  Analysis of layers within dev tools shows that this creates a separate layer in the page.
 * Moved variables dx and new width outside of the for-loop in the ```changePizzaSizes``` function.  This reduced the number of times the layout of the page was forced to change.
+* Calls to ```document.querySelector()``` were replaced with ```document.getElementById()``` and ```document.getElementsByClassName()``` as they are faster.
 
 ##  **Contribute**
 You can report bugs or contribute by using this Github repository: [Github repo ](https://github.com/bobrobcpp/grunt-project)
