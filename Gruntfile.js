@@ -17,6 +17,19 @@ module.exports = function(grunt) {
         dest: 'dist/<%= pkg.name %>.js'
       },
 
+    //Task to inline critical CSS
+      critical: {
+        dist: {
+          options: {
+            base: './'
+          },
+        // The source file
+        src: 'src/index.html',
+        // The destination file: In temp folder to be manually checked and incorporated in index.html
+        dest: 'src/temp/result.html'
+        }
+      },
+
 //minify javascript task
     uglify: {
       options: {
@@ -26,6 +39,19 @@ module.exports = function(grunt) {
         src: 'src/views/js/main.js',
         dest: 'dist/views/js/main.min.js'
       }
+    },
+
+//minify HTML task
+        minifyHtml: {
+        options: {
+            cdata: true
+        },
+        dist: {
+            files: {
+                'dist/index.html': 'src/index.html',
+                'dist/views/pizza.html': 'src/views/pizza.html'
+            }
+        }
     },
 
 //grunt responsive images task
@@ -52,30 +78,6 @@ module.exports = function(grunt) {
       }
     },
 
-//pagespeed task .requires site to be loaded with ngrok
-    pagespeed: {
-  options: {
-    nokey: true,
-    // Change  urls within pagespeed to your ngrok site url
-    url: "http://3ff1c2a9.ngrok.io/"
-  },
-  prod: {
-    options: {
-      url: "http://3ff1c2a9.ngrok.io/",
-      locale: "en_GB",
-      strategy: "desktop",
-      threshold: 80
-    }
-  },
-  paths: {
-    options: {
-      paths: ["http://3ff1c2a9.ngrok.io/"],
-      locale: "en_GB",
-      strategy: "desktop",
-      threshold: 80
-    }
-  }
-},
 
 //minify css task
     cssmin: {
@@ -99,6 +101,10 @@ module.exports = function(grunt) {
       cssmin: {
         files: ['src/**/*.css'],
         tasks: ['cssmin']
+      },
+      minifyHtml: {
+        files: ['src/**/*.html'],
+        tasks: ['minifyHtml']
       }
     }
   });
@@ -106,12 +112,13 @@ module.exports = function(grunt) {
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-pagespeed');
   grunt.loadNpmTasks('grunt-responsive-images');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-critical');
+  grunt.loadNpmTasks('grunt-minify-html');
 
 
   // Default task.
-  grunt.registerTask('default', ['uglify']);
+  grunt.registerTask('default', ['watch']);
 
 };

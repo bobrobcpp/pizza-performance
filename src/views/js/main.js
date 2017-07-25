@@ -470,7 +470,7 @@ var resizePizzas = function(size) {
 
 window.performance.mark("mark_start_generating"); // collect timing data
 
-// This for-loop actually creates and appends all of the pizzas when the page loads
+// This for-loop creates and appends all of the pizzas when the page loads
   var pizzasDiv = document.querySelector("#randomPizzas");
 for (var i = 2; i < 100; i++) {
   pizzasDiv.appendChild(pizzaElementGenerator(i));
@@ -500,8 +500,6 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
 // Moves the sliding background pizzas based on scroll position
-
-
 function updatePositions(scrollPosition) {
   frame++;
   window.performance.mark("mark_start_frame");
@@ -526,9 +524,8 @@ var scroll = scrollPosition/1250;
 
 
 
-// runs updatePositions on scroll
+// runs updatePositions when user scrolls
   var scrollPos = 0;
-
   window.addEventListener('scroll',function(e){
     scrollPos= document.body.scrollTop;
     requestAnimationFrame(updatePositions);
