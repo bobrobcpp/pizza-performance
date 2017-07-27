@@ -33,11 +33,15 @@ module.exports = function(grunt) {
 //minify javascript task
     uglify: {
       options: {
-      compress: {},
+                manage: false,
+        output: {
+          comments: 'all'
+        }
       },
-      dist: {
-        src: 'src/views/js/main.js',
-        dest: 'dist/views/js/main.js'
+            target: {
+        files: {
+          'dist/views/js/test1.js' : ['src/views/js/main.js']
+        }
       }
     },
 
